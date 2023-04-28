@@ -2,13 +2,13 @@
   display: block;
   margin: 0 auto;
   margin-bottom: 50px;
-  width: 1000px;
+  width: 950px;
   height: 250px;
 }
 
 #keyboard {
   margin: 0 auto;
-  width: 1000px;
+  width: 950px;
   height: 500px;
   display: block;
   border: 2px solid black;
@@ -22,4 +22,12 @@
   margin: 3px;
   padding: 3px;
   float: left;
+}
+
+.key:active {
+  background-color: blue
+}
+
+.active {
+  background-color: blue;
 }

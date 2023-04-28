@@ -12,9 +12,9 @@ export const KEYS__ENG = {
   Digit0: ['0', ')'],
   Minus: ['-', '_'],
   Equal: ['=', '+'],
-  Backspace: ['Backspace'],
+  Backspace: ['Backspace', 'Backspace'],
   // 
-  Tab: ['Tab'],
+  Tab: ['Tab', 'Tab'],
   KeyQ: ['q', 'Q'],
   KeyW: ['w', 'W'],
   KeyE: ['e', 'E'],
@@ -28,6 +28,7 @@ export const KEYS__ENG = {
   BracketLeft: ['[', '{'],
   BracketRight: [']', '}'],
   Backslash: ['\\', '|'],
+  Del: ['Del', 'Del'],
   // 
   CapsLock: ['CapsLock', 'CapsLock'],
   KeyA: ['a', 'A'],
@@ -38,7 +39,7 @@ export const KEYS__ENG = {
   KeyH: ['h', 'H'],
   KeyJ: ['j', 'J'],
   KeyK: ['k', 'K'],
-  KeyL: ['k', 'K'],
+  KeyL: ['l', 'L'],
   Semicolon: [';', ':'],
   Quote: ['\'', '"'],
   Enter: ['Enter', 'Enter'],
@@ -54,18 +55,18 @@ export const KEYS__ENG = {
   Comma: [',', '<'],
   Period: ['.', '>'],
   Slash: ['/', '?'],
-  ArrowUp: ['ArrowUp', 'ArrowUp'],
-  ShiftRight: ['ShiftRight', 'ShiftRight'],
+  ArrowUp: ['↑', '↑'],
+  ShiftRight: ['Shift', 'Shift'],
   // 
   ControlLeft: ['Control', 'Control'],
-  MetaLeft: ['MetaLeft', 'MetaLeft'],
+  MetaLeft: ['Win', 'Win'],
   AltLeft: ['Alt', 'Alt'],
   Space: [' ', ' '],
   AltRight: ['Alt', 'Alt'],
-  ControlRight: ['Control', 'Control'],
-  ArrowLeft: ['ArrowLeft', 'ArrowLeft'],
-  ArrowDown: ['ArrowDown', 'ArrowDown'],
-  ArrowRight: ['ArrowRight', 'ArrowRight'],
+  ControlRight: ['Ctrl', 'Ctrl'],
+  ArrowLeft: ['←', '←'],
+  ArrowDown: ['↓', '↓'],
+  ArrowRight: ['→', '→'],
 }
 
 export const KEYS__RUS = {
@@ -98,6 +99,7 @@ export const KEYS__RUS = {
   BracketLeft: ['х', 'Х'],
   BracketRight: ['ъ', 'Ъ'],
   Backslash: ['\\', '/'],
+  Del: ['Del', 'Del'],
   // 
   CapsLock: ['CapsLock', 'CapsLock'],
   KeyA: ['ф', 'Ф'],
@@ -137,3 +139,10 @@ export const KEYS__RUS = {
   ArrowDown: ['ArrowDown', 'ArrowDown'],
   ArrowRight: ['ArrowRight', 'ArrowRight'],
 }
+
+export const specialKeys = ['Backspace', 'Tab', 'CapsLock', 'Enter', 'ShiftLeft',
+  'ShiftRight', 'ArrowUp', 'ControlLeft', 'MetaLeft', 'AltLeft', 'AltRight',
+  'ControlRight', 'ArrowLeft', 'ArrowDown', 'ArrowRight', 'Del'];
+
+export const lettersKeyboard = ['KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'KeyA',
+  'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM'];
