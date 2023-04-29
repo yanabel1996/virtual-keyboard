@@ -8,26 +8,68 @@
 
 #keyboard {
   margin: 0 auto;
-  width: 950px;
-  height: 500px;
+  width: 811px;
+  height: 270px;
   display: block;
-  border: 2px solid black;
+  border: 2px solid hsl(0, 0%, 83%);
   padding: 5px;
+  border-radius: 10px;
 }
 
 .key {
-  width: 50px;
-  height: 50px;
-  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 40px;
+  height: 40px;
+  border: 1px solid hsl(0, 0%, 83%);
   margin: 3px;
   padding: 3px;
+  border-radius: 7px;
+  box-shadow: 0px 0px 1px #b2b2b2, 1px 1px 3px #b2b2b2, 1px 1px 5px #f6f6f6 inset;;
   float: left;
 }
 
 .key:active {
-  background-color: blue
+  background-color: rgba(179, 255, 0, 0.3);
 }
 
 .active {
-  background-color: blue;
+  background-color: rgba(179, 255, 0, 0.3);
+}
+
+.shifted {
+  flex-direction: column-reverse;
+}
+
+.Backspace, .CapsLock, .Enter, .ShiftLeft, .ShiftRight {
+  width: 94px;
+}
+
+.ControlLeft, .AltRight {
+  width: 65px;
+}
+
+.Space {
+  width: 314px;
+}
+
+.CapsLock::before {
+  content: '';
+  position: relative;
+  top: 0px;
+  left: 37px;
+  width: 3px;
+  height: 3px;
+  border: 0.5px solid hsl(0, 0%, 83%);
+  border-radius: 50%;
+}
+
+.CapsLock--active::before {
+  background-color: rgb(60, 255, 0);
+}
+
+.uppercase {
+  text-transform: uppercase;
 }
