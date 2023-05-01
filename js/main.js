@@ -1,31 +1,4 @@
-// import { initRussianKeyboard, initEnglishKeyboard, language } from './keyboardsinit.js'
 
-// window.addEventListener('DOMContentLoaded', () => {
-//   initEnglishKeyboard();
-//   language = 'english';
-// })
-
-// document.addEventListener('keydown', (event) => {
-//   if (event.code === 'AltLeft') {
-//     if (event.code === 'ShiftLeft' && language === 'english') {
-//       keyboardConainer.innerHTML = '';
-//       language === 'russian';
-//       initRussianKeyboard();
-//       return console.log('djkfvbi');
-//     }
-//   } else if (event.code === 'ShiftLeft') {
-//     if (event.code === 'AltLeft' && language === 'english') {
-//       keyboardConainer.innerHTML = '';
-//       language === 'russian';
-//       initRussianKeyboard();ommit
-//       return console.log('hi');
-//     }
-//   } else {
-//     keyboardConainer.innerHTML = '';
-//     language === 'english';
-//     initEnglishKeyboard();
-//   }
-// })
 const KEYS__ENG = {
   Backquote: ['`', `~`],
   Digit1: ['1', '!'],
@@ -172,7 +145,7 @@ const specialKeys = ['Backspace', 'Tab', 'CapsLock', 'Enter', 'ShiftLeft',
   'ShiftRight', 'ArrowUp', 'ControlLeft', 'MetaLeft', 'AltLeft', 'AltRight',
   'ControlRight', 'ArrowLeft', 'ArrowDown', 'ArrowRight', 'Del'];
 
-const lettersKeyboard = ['KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'KeyA',
+const lettersEngKeyboard = ['KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'KeyA',
   'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM'];
 
 const lettersRusKeyboard = ['Backquote', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'KeyA',
@@ -183,6 +156,7 @@ let language = '';
 let isCapsLock = '';
 let isShift = '';
 let textareaString = '';
+let flag = false;
 
 let textSpace = document.createElement("textarea");
 textSpace.classList = "textarea";
@@ -200,30 +174,7 @@ window.addEventListener('DOMContentLoaded', () => {
   init();
 })
 
-function printByMouse(elem, obj, string) {
-  textSpace.focus();
-  if (obj === KEYS__ENG && !isCapsLock && !(specialKeys.includes(elem.dataset.id))) {
-    string += obj[elem.dataset.id][0];
-  } else if (obj === KEYS__ENG && isCapsLock && !(specialKeys.includes(elem.dataset.id))) {
-    if (lettersKeyboard.includes(elem.dataset.id)) {
-      string += obj[elem.dataset.id][1];
-    } else {
-      string += obj[elem.dataset.id][0];
-    }
-  }
-  if (obj === KEYS__RUS && !isCapsLock && !(specialKeys.includes(elem.dataset.id))) {
-    string += obj[elem.dataset.id][0];
-  } else if (obj === KEYS__RUS && isCapsLock && !(specialKeys.includes(elem.dataset.id))) {
-    if (lettersRusKeyboard.includes(elem.dataset.id)) {
-      string += obj[elem.dataset.id][1];
-    } else {
-      string += obj[elem.dataset.id][0];
-    }
-  }
-  textSpace.value = string;
-}
-
-function shiftDown(ev, buttons) {
+function shiftDown(ev, buttons, leter) {
   if ((ev.code === 'ShiftLeft' || ev.code === 'ShiftRight') && !isShift) {
     isShift = true;
     buttons.forEach(function (elem) {
@@ -231,11 +182,16 @@ function shiftDown(ev, buttons) {
         elem.classList.add('shifted');
       }
     })
+    leter.forEach(function (elem) {
+      if (!(elem.dataset.id === 'CapsLock')) {
+        elem.classList.add('uppercase');
+      }
+    })
   }
 
 }
 
-function shiftUp(ev, buttons) {
+function shiftUp(ev, buttons, leter) {
   if ((ev.code === 'ShiftLeft' || ev.code === 'ShiftRight') && isShift) {
     isShift = false;
     buttons.forEach(function (elem) {
@@ -243,141 +199,186 @@ function shiftUp(ev, buttons) {
         elem.classList.remove('shifted');
       }
     })
-  }
-}
 
-function capsLock(ev, button) {
-  if (ev.code === 'CapsLock' && !isCapsLock) {
-    isCapsLock = true;
-    button.classList.add('CapsLock--active');
-  } else {
-    isCapsLock = false;
-    button.classList.remove('CapsLock--active');
-  }
-}
-
-function capsLockActive(obj, button) {
-  if (obj === KEYS__ENG && !isCapsLock) {
-    if (!specialKeys.includes(button.dataset.id)) {
-      button.forEach(elem => {
-        elem.classList.add('uppercase');
-      })
-    }
-  }
-  if (obj === KEYS__RUS && !isCapsLock) {
-    if (!specialKeys.includes(button.dataset.id)) {
-      button.forEach(elem => {
-        elem.classList.add('uppercase');
-      })
-    }
-
-  }
-}
-
-function capsLockPassive(button) {
-  if (isCapsLock) {
-    button.forEach(elem => {
-      elem.classList.remove('uppercase');
+    leter.forEach(function (elem) {
+      if (!(elem.dataset.id === 'CapsLock')) {
+        elem.classList.remove('uppercase');
+      }
     })
+  }
+}
+
+function capsLock(button, ev, key) {
+  if (ev.code === 'CapsLock') {
+    if (!isCapsLock) {
+      key.forEach(function (elem) {
+        elem.classList.add('uppercase');
+      });
+      button.classList.add('CapsLock--active');
+      isCapsLock = true;
+    } else {
+      button.classList.remove('CapsLock--active');
+      key.forEach(function (elem) {
+        elem.classList.remove('uppercase');
+      })
+      isCapsLock = false;
+    }
   }
 }
 
 function init() {
   if (language === 'english') {
-    initEngKeyboard(KEYS__ENG);
-  }
-  if (language === 'russian') {
-    initRusKeyboard(KEYS__RUS);
+    initKeyboard(KEYS__ENG, lettersEngKeyboard);
+  } else if (language === 'russian') {
+    initKeyboard(KEYS__RUS, lettersRusKeyboard);
   }
 
-}
-
-function initEngKeyboard(object) {
-  for (let key in object) {
-    let keyKeyboard = document.createElement("div");
-    keyKeyboard.classList.add("key");
-    keyKeyboard.classList.add(`${key}`);
-    keyKeyboard.dataset.id = `${key}`;
-    if (specialKeys.includes(String(key))) {
-      keyKeyboard.innerHTML = String(object[key][0]);
-    } else if (lettersKeyboard.includes(String(key))) {
-      if ((isShift && !isCapsLock) || (!isShift && isCapsLock)) {
-        keyKeyboard.innerHTML = String(object[key][1]);
-      } else if ((!isShift && !isCapsLock) || (isShift && isCapsLock)) {
-        keyKeyboard.innerHTML = String(object[key][0]);
+  document.querySelectorAll('.key').forEach(function (element) {
+    element.addEventListener('click', () => {
+      textSpace.focus();
+      if (language === 'english' && !specialKeys.includes(element.dataset.id)) {
+        if (!isShift) {
+          if (lettersEngKeyboard.includes(element.dataset.id)) {
+            textSpace.value += element.innerHTML;
+          } else {
+            textSpace.value += element.childNodes[1].innerHTML;
+          }
+        } else {
+          if (lettersEngKeyboard.includes(element.dataset.id)) {
+            textSpace.value += element.innerHTML;
+          } else {
+            textSpace.value += element.childNodes[0].innerHTML;
+          }
+        }
+      } else if (language === 'russian' && !specialKeys.includes(element.dataset.id)) {
+        if (!isShift) {
+          if (lettersRusKeyboard.includes(element.dataset.id)) {
+            textSpace.value += element.innerHTML;
+          } else {
+            textSpace.value += element.childNodes[1].innerHTML;
+          }
+        } else {
+          if (lettersRusKeyboard.includes(element.dataset.id)) {
+            textSpace.value += element.innerHTML;
+          } else {
+            textSpace.value += element.childNodes[0].innerHTML;
+          }
+        }
       }
-    } else {
-      keyKeyboard.innerHTML = `<span>${String(object[key][1])}</span>` + `<span>${String(object[key][0])}</span>`;
-    }
-    keyboardConainer.append(keyKeyboard);
-  }
-
-  let keyCapsLock = document.querySelector('.CapsLock');
-  let keys = document.querySelectorAll('.key');
-
-  document.addEventListener('keydown', (event) => {
-    textSpace.focus();
-    capsLock(event, keyCapsLock);
-    shiftDown(event, keys);
-    capsLockActive(object, keys);
-    document.querySelector('#keyboard .key[data-id="' + event.code + '"]').classList.add('active');
-  })
-
-  document.addEventListener('keyup', (event) => {
-    shiftUp(event, keys);
-    capsLockPassive(keys);
-    keys.forEach(function (elem) {
-      elem.classList.remove('active')
     })
   })
 
-  keys.forEach(function (element) {
-    element.addEventListener('click', printByMouse(element, object, textareaString))
+  document.querySelector('.ShiftLeft').addEventListener('mousedown', () => {
+    document.querySelectorAll('.letter').forEach(function (elem) {
+      elem.classList.add('uppercase');
+    })
+
+    document.querySelectorAll('.digit').forEach(function (elem) {
+      elem.classList.add('shifted');
+    })
   })
 
+  document.querySelector('.ShiftLeft').addEventListener('mouseup', () => {
+    document.querySelectorAll('.letter').forEach(function (elem) {
+      elem.classList.remove('uppercase');
+    })
+
+    document.querySelectorAll('.digit').forEach(function (elem) {
+      elem.classList.remove('shifted');
+    })
+  })
+
+  document.querySelector('.ShiftRight').addEventListener('mousedown', () => {
+    document.querySelectorAll('.letter').forEach(function (elem) {
+      elem.classList.add('uppercase');
+    })
+
+    document.querySelectorAll('.digit').forEach(function (elem) {
+      elem.classList.add('shifted');
+    })
+  })
+
+  document.querySelector('.ShiftRight').addEventListener('mouseup', () => {
+    document.querySelectorAll('.letter').forEach(function (elem) {
+      elem.classList.remove('uppercase');
+    })
+
+    document.querySelectorAll('.digit').forEach(function (elem) {
+      elem.classList.remove('shifted');
+    })
+  })
+
+  document.querySelector('.CapsLock').addEventListener('click', () => {
+    if (!isCapsLock) {
+      document.querySelectorAll('.letter').forEach(function (elem) {
+        elem.classList.add('uppercase');
+      });
+      document.querySelector('.CapsLock').classList.add('CapsLock--active');
+      isCapsLock = true;
+    } else {
+      document.querySelector('.CapsLock').classList.remove('CapsLock--active');
+      document.querySelectorAll('.letter').forEach(function (elem) {
+        elem.classList.remove('uppercase');
+      })
+      isCapsLock = false;
+    }
+  })
+
+  document.querySelector('.Backspace').addEventListener('click', () => {
+    textSpace.value = textSpace.value.substring(0, textSpace.value.length - 1);
+  })
+
+  // document.querySelector('.Del').addEventListener('click', () => {
+
+  // })
+
+  // document.querySelector('.Tab').addEventListener('click', () => {
+
+  // })
+
+  document.querySelector('.Space').addEventListener('click', () => {
+    textSpace.value += "";
+  })
+
+  document.querySelector('.Enter').addEventListener('click', () => {
+    textSpace.value += "\n";
+  })
 }
 
-function initRusKeyboard(object) {
+function initKeyboard(object, array) {
   for (let key in object) {
     let keyKeyboard = document.createElement("div");
     keyKeyboard.classList.add("key");
     keyKeyboard.classList.add(`${key}`);
     keyKeyboard.dataset.id = `${key}`;
+
     if (specialKeys.includes(String(key))) {
       keyKeyboard.innerHTML = String(object[key][0]);
-    } else if (lettersRusKeyboard.includes(String(key))) {
-      if ((isShift && !isCapsLock) || (!isShift && isCapsLock)) {
-        keyKeyboard.innerHTML = String(object[key][1]);
-      } else if ((!isShift && !isCapsLock) || (isShift && isCapsLock)) {
-        keyKeyboard.innerHTML = String(object[key][0]);
-      }
+    } else if (array.includes(String(key))) {
+      keyKeyboard.innerHTML = String(object[key][0]);
+      keyKeyboard.classList.add("letter");
     } else {
       keyKeyboard.innerHTML = `<span>${String(object[key][1])}</span>` + `<span>${String(object[key][0])}</span>`;
+      keyKeyboard.classList.add("digit");
     }
+
     keyboardConainer.append(keyKeyboard);
   }
-
-  document.addEventListener('keydown', (event) => {
-    textSpace.focus();
-    capsLock(event);
-    document.querySelector('#keyboard .key[data-id="' + event.code + '"]').classList.add('active');
-  })
-
-  document.querySelectorAll('.key').forEach(function (element) {
-    let textareaString = '';
-    element.addEventListener('click', printByMouse(element, object, textareaString))
-  })
 }
 
+document.addEventListener('keydown', (event) => {
+  textSpace.focus();
+  shiftDown(event, document.querySelectorAll('.key'), document.querySelectorAll('.letter'));
+  capsLock(document.querySelector('.CapsLock'), event, document.querySelectorAll('.letter'));
+  document.querySelector('#keyboard .key[data-id="' + event.code + '"]').classList.add('active');
+})
 
-
-document.addEventListener('keyup', () => {
-  document.querySelectorAll('#keyboard .key').forEach(function (elem) {
+document.addEventListener('keyup', (event) => {
+  shiftUp(event, document.querySelectorAll('.key'), document.querySelectorAll('.letter'));
+  document.querySelectorAll('.key').forEach(function (elem) {
     elem.classList.remove('active')
   })
 })
-
-let flag = false;
 
 document.addEventListener('keydown', (event) => {
   if (event.code === 'AltLeft') flag = true;
@@ -395,3 +396,7 @@ document.addEventListener('keydown', (event) => {
   }
   localStorage.setItem('lang', language);
 })
+
+
+
+

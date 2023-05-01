@@ -1,148 +1,149 @@
-export const KEYS__ENG = {
-  Backquote: ['`', `~`],
-  Digit1: ['1', '!'],
-  Digit2: ['2', '@'],
-  Digit3: ['3', '#'],
-  Digit4: ['4', '$'],
-  Digit5: ['5', '%'],
-  Digit6: ['6', '^'],
-  Digit7: ['7', '&'],
-  Digit8: ['8', '*'],
-  Digit9: ['9', '('],
-  Digit0: ['0', ')'],
-  Minus: ['-', '_'],
-  Equal: ['=', '+'],
-  Backspace: ['Backspace', 'Backspace'],
-  // 
-  Tab: ['Tab', 'Tab'],
-  KeyQ: ['q', 'Q'],
-  KeyW: ['w', 'W'],
-  KeyE: ['e', 'E'],
-  KeyR: ['r', 'R'],
-  KeyT: ['t', 'T'],
-  KeyY: ['y', 'Y'],
-  KeyU: ['u', 'U'],
-  KeyI: ['i', 'I'],
-  KeyO: ['o', 'O'],
-  KeyP: ['p', 'P'],
-  BracketLeft: ['[', '{'],
-  BracketRight: [']', '}'],
-  Backslash: ['\\', '|'],
-  Del: ['Del', 'Del'],
-  // 
-  CapsLock: ['CapsLock', 'CapsLock'],
-  KeyA: ['a', 'A'],
-  KeyS: ['s', 'S'],
-  KeyD: ['d', 'D'],
-  KeyF: ['f', 'F'],
-  KeyG: ['g', 'G'],
-  KeyH: ['h', 'H'],
-  KeyJ: ['j', 'J'],
-  KeyK: ['k', 'K'],
-  KeyL: ['l', 'L'],
-  Semicolon: [';', ':'],
-  Quote: ['\'', '"'],
-  Enter: ['Enter', 'Enter'],
-  // 
-  ShiftLeft: ['Shift', 'Shift'],
-  KeyZ: ['z', 'Z'],
-  KeyX: ['x', 'X'],
-  KeyC: ['c', 'C'],
-  KeyV: ['v', 'V'],
-  KeyB: ['b', 'B'],
-  KeyN: ['n', 'N'],
-  KeyM: ['m', 'M'],
-  Comma: [',', '<'],
-  Period: ['.', '>'],
-  Slash: ['/', '?'],
-  ArrowUp: ['↑', '↑'],
-  ShiftRight: ['Shift', 'Shift'],
-  // 
-  ControlLeft: ['Control', 'Control'],
-  MetaLeft: ['Win', 'Win'],
-  AltLeft: ['Alt', 'Alt'],
-  Space: [' ', ' '],
-  AltRight: ['Alt', 'Alt'],
-  ControlRight: ['Ctrl', 'Ctrl'],
-  ArrowLeft: ['←', '←'],
-  ArrowDown: ['↓', '↓'],
-  ArrowRight: ['→', '→'],
+class KeybordBuilder {
+  constructor() {
+    this.textarea = this.initTextarea();
+    this.keyboardContainer = this.initKeyboardContainer();
+    this.keys = this.initKeyboardKeys();
+    this.language = localStorage.getItem('lang') || 'english';
+    this.isCapsLock = false;
+    this.isShift = false;
+    this.textareaString = '';
+    this.keyRusData = KEYS__RUS;
+    this.keyEngData = KEYS__ENG;
+    this.specialKeys = specialKeys;
+    this.lettersEngKeyboard = lettersEngKeyboard;
+    this.lettersRusKeyboard = lettersRusKeyboard;
+    this.flag = false;
+
+  }
+
+  init() {
+    this.initTextarea();
+    this.initKeyboardContainer();
+    this.initKeyboard();
+    this.initKeyboardKeys();
+  }
+
+  initKeyboard = () => {
+    if (this.language === 'english') {
+      this.initKeyboardKeys(this.KEYS__ENG, this.lettersEngKeyboard);
+    } else if (this.language === 'russian') {
+      this.initKeyboardKeys(this.KEYS__RUS, this.lettersRusKeyboard);
+    }
+  }
+
+  initTextarea = () => {
+    let textSpace = document.createElement("textarea");
+    textSpace.classList = "textarea";
+    document.body.appendChild(textSpace);
+  }
+
+  initKeyboardContainer() {
+    let keyboardConainer = document.createElement("div");
+    keyboardConainer.id = "keyboard";
+    document.body.appendChild(keyboardConainer);
+  }
+
+  initKeyboardKeys = (object, array) => {
+    for (let key in object) {
+      let keyKeyboard = document.createElement("div");
+      keyKeyboard.classList.add("key");
+      keyKeyboard.classList.add(`${key}`);
+      keyKeyboard.dataset.id = `${key}`;
+
+      if (this.specialKeys.includes(String(key))) {
+        keyKeyboard.innerHTML = String(object[key][0]);
+      } else if (array.includes(String(key))) {
+        keyKeyboard.innerHTML = String(object[key][0]);
+        keyKeyboard.classList.add("letter");
+      } else {
+        keyKeyboard.innerHTML = `<span>${String(object[key][1])}</span>` + `<span>${String(object[key][0])}</span>`;
+      }
+
+      this.keyboardConainer.append(keyKeyboard);
+    }
+
+  }
+
+  shiftDown = (ev, buttons) => {
+    if ((ev.code === 'ShiftLeft' || ev.code === 'ShiftRight') && !this.isShift) {
+      this.isShift = true;
+      buttons.forEach(function (elem) {
+        if (!(elem.dataset.id === 'CapsLock')) {
+          elem.classList.add('shifted');
+        }
+      })
+    }
+  }
+
+  shiftUp = (ev, buttons) => {
+    if ((ev.code === 'ShiftLeft' || ev.code === 'ShiftRight') && this.isShift) {
+      this.isShift = false;
+      buttons.forEach(function (elem) {
+        if (!(elem.dataset.id === 'CapsLock')) {
+          elem.classList.remove('shifted');
+        }
+      })
+    }
+  }
+
+  capsLock = (button, ev, key) => {
+    if (ev.code === 'CapsLock') {
+      if (!this.isCapsLock) {
+        key.forEach(function (elem) {
+          elem.classList.add('uppercase');
+        });
+        button.classList.add('CapsLock--active');
+        this.isCapsLock = true;
+      } else {
+        button.classList.remove('CapsLock--active');
+        key.forEach(function (elem) {
+          elem.classList.remove('uppercase');
+        })
+        this.isCapsLock = false;
+      }
+    }
+  }
+
+  eventsKeyboard = () => {
+    let keyCapsLock = document.querySelector('.CapsLock');
+    let letter = document.querySelectorAll('.letter');
+
+    document.addEventListener('keydown', (event) => {
+      // switch lang
+      if (event.code === 'AltLeft') this.lag = true;
+      if (event.code === 'ShiftLeft' && this.language === 'english' && this.flag) {
+        this.language = 'russian';
+        keyboardConainer.innerHTML = '';
+        this.initKeyboard();
+        this.flag = false;
+      }
+      if (event.code === 'ShiftLeft' && this.language === 'russian' && this.flag) {
+        this.language = 'english';
+        this.keyboardConainer.innerHTML = '';
+        this.initKeyboard();
+        this.flag = false;
+      }
+      localStorage.setItem('lang', this.language);
+
+      this.textarea.focus();
+      this.shiftDown(event, this.keys);
+      this.capsLock(keyCapsLock, event, letter);
+      document.querySelector('#keyboard .key[data-id="' + event.code + '"]').classList.add('active');
+    })
+
+    document.addEventListener('keyup', (event) => {
+      shiftUp(event, this.keys);
+      this.keys.forEach(function (elem) {
+        elem.classList.remove('active')
+      })
+    })
+  }
+
 }
 
-export const KEYS__RUS = {
-  Backquote: ['ё', `Ё`],
-  Digit1: ['1', '!'],
-  Digit2: ['2', '"'],
-  Digit3: ['3', '№'],
-  Digit4: ['4', ';'],
-  Digit5: ['5', '%'],
-  Digit6: ['6', ':'],
-  Digit7: ['7', '?'],
-  Digit8: ['8', '*'],
-  Digit9: ['9', '('],
-  Digit0: ['0', ')'],
-  Minus: ['-', '_'],
-  Equal: ['=', '+'],
-  Backspace: ['Backspace'],
-  // 
-  Tab: ['Tab'],
-  KeyQ: ['й', 'Й'],
-  KeyW: ['ц', 'Ц'],
-  KeyE: ['у', 'У'],
-  KeyR: ['к', 'К'],
-  KeyT: ['е', 'Е'],
-  KeyY: ['н', 'Н'],
-  KeyU: ['г', 'Г'],
-  KeyI: ['ш', 'Ш'],
-  KeyO: ['щ', 'Щ'],
-  KeyP: ['з', 'З'],
-  BracketLeft: ['х', 'Х'],
-  BracketRight: ['ъ', 'Ъ'],
-  Backslash: ['\\', '/'],
-  Del: ['Del', 'Del'],
-  // 
-  CapsLock: ['CapsLock', 'CapsLock'],
-  KeyA: ['ф', 'Ф'],
-  KeyS: ['ы', 'Ы'],
-  KeyD: ['в', 'В'],
-  KeyF: ['а', 'А'],
-  KeyG: ['п', 'П'],
-  KeyH: ['р', 'Р'],
-  KeyJ: ['о', 'О'],
-  KeyK: ['л', 'Л'],
-  KeyL: ['д', 'Д'],
-  Semicolon: ['ж', 'Ж'],
-  Quote: ['э', 'Э'],
-  Enter: ['Enter', 'Enter'],
-  // 
-  ShiftLeft: ['Shift', 'Shift'],
-  KeyZ: ['я', 'Я'],
-  KeyX: ['ч', 'Ч'],
-  KeyC: ['с', 'С'],
-  KeyV: ['м', 'М'],
-  KeyB: ['и', 'И'],
-  KeyN: ['т', 'Т'],
-  KeyM: ['ь', 'Ь'],
-  Comma: ['б', 'Б'],
-  Period: ['ю', 'Ю'],
-  Slash: ['.', ','],
-  ArrowUp: ['ArrowUp', 'ArrowUp'],
-  ShiftRight: ['ShiftRight', 'ShiftRight'],
-  // 
-  ControlLeft: ['Control', 'Control'],
-  MetaLeft: ['MetaLeft', 'MetaLeft'],
-  AltLeft: ['Alt', 'Alt'],
-  Space: [' ', ' '],
-  AltRight: ['Alt', 'Alt'],
-  ControlRight: ['Control', 'Control'],
-  ArrowLeft: ['ArrowLeft', 'ArrowLeft'],
-  ArrowDown: ['ArrowDown', 'ArrowDown'],
-  ArrowRight: ['ArrowRight', 'ArrowRight'],
-}
 
-export const specialKeys = ['Backspace', 'Tab', 'CapsLock', 'Enter', 'ShiftLeft',
-  'ShiftRight', 'ArrowUp', 'ControlLeft', 'MetaLeft', 'AltLeft', 'AltRight',
-  'ControlRight', 'ArrowLeft', 'ArrowDown', 'ArrowRight', 'Del'];
 
-export const lettersKeyboard = ['KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'KeyA',
-  'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM'];
+window.addEventListener('DOMContentLoaded', () => {
+  let keyboard = new KeybordBuilder;
+  keyboard.init();
+})
