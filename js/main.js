@@ -226,6 +226,15 @@ function capsLock(button, ev, key) {
   }
 }
 
+function tab(ev) {
+  if (ev.code === 'Tab') {
+    ev.preventDefault();
+    textSpace.focus();
+    textSpace.value += "    ";
+  }
+
+} 
+
 function init() {
   if (language === 'english') {
     initKeyboard(KEYS__ENG, lettersEngKeyboard);
@@ -328,13 +337,21 @@ function init() {
     textSpace.value = textSpace.value.substring(0, textSpace.value.length - 1);
   })
 
-  // document.querySelector('.Del').addEventListener('click', () => {
+  document.querySelector('.Del').addEventListener('click', () => {
+    const start = textSpace.selectionStart;
+    const end = textSpace.selectionEnd;
+    if (start === end && end < textSpace.value.length) {
+      textSpace.value = textSpace.value.slice(0, start) + textSpace.value.slice(start + 1);
+    } else {
+      textSpace.value = textSpace.value.slice(0, start) + textSpace.value.slice(end);
+    }
+    textSpace.selectionStart = textSpace.selectionEnd = start;
+    textSpace.focus();
+  })
 
-  // })
-
-  // document.querySelector('.Tab').addEventListener('click', () => {
-
-  // })
+  document.querySelector('.Tab').addEventListener('click', () => {
+    textSpace.value += "    ";
+  })
 
   document.querySelector('.Space').addEventListener('click', () => {
     textSpace.value += "";
@@ -343,6 +360,21 @@ function init() {
   document.querySelector('.Enter').addEventListener('click', () => {
     textSpace.value += "\n";
   })
+
+  document.querySelector('.ArrowLeft').addEventListener('click', () => {
+    textSpace.selectionStart -= 1;
+    textSpace.selectionEnd = textSpace.selectionStart;
+  }, true)
+
+  document.querySelector('.ArrowRight').addEventListener('click', () => {
+    textSpace.selectionStart += 1;
+    textSpace.selectionEnd = textSpace.selectionStart;
+  }, true)
+
+  document.querySelector('.MetaLeft').addEventListener('click', (ev) => {
+    ev.preventDefault();
+  })
+
 }
 
 function initKeyboard(object, array) {
@@ -368,6 +400,7 @@ function initKeyboard(object, array) {
 
 document.addEventListener('keydown', (event) => {
   textSpace.focus();
+  tab(event);
   shiftDown(event, document.querySelectorAll('.key'), document.querySelectorAll('.letter'));
   capsLock(document.querySelector('.CapsLock'), event, document.querySelectorAll('.letter'));
   document.querySelector('#keyboard .key[data-id="' + event.code + '"]').classList.add('active');
