@@ -1,6 +1,5 @@
-
 const KEYS__ENG = {
-  Backquote: ['`', `~`],
+  Backquote: ['`', '~'],
   Digit1: ['1', '!'],
   Digit2: ['2', '@'],
   Digit3: ['3', '#'],
@@ -71,7 +70,7 @@ const KEYS__ENG = {
 }
 
 const KEYS__RUS = {
-  Backquote: ['ё', `Ё`],
+  Backquote: ['ё', 'Ё'],
   Digit1: ['1', '!'],
   Digit2: ['2', '"'],
   Digit3: ['3', '№'],
@@ -429,7 +428,3 @@ document.addEventListener('keydown', (event) => {
   }
   localStorage.setItem('lang', language);
 })
-
-
-
-
