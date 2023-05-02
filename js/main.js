@@ -349,16 +349,16 @@ function init() {
   })
 
   document.querySelector('.Tab').addEventListener('click', () => {
-    textSpace.value += "    ";
-  })
+    textSpace.setRangeText('\t', textSpace.selectionStart, textSpace.selectionEnd, 'end');
+  }, true)
 
   document.querySelector('.Space').addEventListener('click', () => {
-    textSpace.value += "";
-  })
+    textSpace.setRangeText(' ', textSpace.selectionStart, textSpace.selectionEnd, 'end');
+  }, true)
 
   document.querySelector('.Enter').addEventListener('click', () => {
-    textSpace.value += "\n";
-  })
+    textSpace.setRangeText('\n', textSpace.selectionStart, textSpace.selectionEnd, 'end');
+  }, true)
 
   document.querySelector('.ArrowLeft').addEventListener('click', () => {
     textSpace.selectionStart -= 1;
