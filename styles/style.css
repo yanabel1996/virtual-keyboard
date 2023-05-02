@@ -7,7 +7,7 @@
 }
 
 #keyboard {
-  margin: 0 auto;
+  margin: 0 auto 30px;
   width: 811px;
   height: 270px;
   display: block;
@@ -89,4 +89,20 @@
 
 .shifted.key span:nth-child(1) {
   font-size: 20px;
+}
+
+#clue {
+  width: 811px;
+  height: 80px;
+  margin: 0 auto;
+  padding: 15px;
+  background-color: #b2b2b238;
+  border: 2px solid #c9c9c9;
+  border-radius: 20px;
+}
+
+#clue-text {
+  text-align: center;
+  font-size: 24px;
+  color: rgb(100, 100, 100);
 }

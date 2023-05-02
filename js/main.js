@@ -165,6 +165,15 @@ let keyboardConainer = document.createElement("div");
 keyboardConainer.id = "keyboard";
 document.body.appendChild(keyboardConainer);
 
+let clueContainer = document.createElement("div");
+clueContainer.id = "clue";
+document.body.appendChild(clueContainer);
+
+let clueText = document.createElement("p");
+clueText.innerHTML = 'To change the language press Alt + Shift';
+clueText.id = "clue-text";
+clueContainer.appendChild(clueText);
+
 window.addEventListener('DOMContentLoaded', () => {
   language = localStorage.getItem('lang') || 'english';
   isCapsLock = false;
@@ -232,7 +241,7 @@ function tab(ev) {
     textSpace.value += "    ";
   }
 
-} 
+}
 
 function init() {
   if (language === 'english') {
